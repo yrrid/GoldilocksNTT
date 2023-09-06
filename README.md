@@ -47,7 +47,7 @@ To compile and run the CPU code and verify the results:
 ### Performance
 
 I am running on an RTX 4070 Ti, and I see the best performance with `./gpu_tester 3072 100`, with a run time of
-4.713 ms.  This is 3*1024*100 / 0.004713 = 65.2 million 1024-point NTTs per second.   Note, this performance
+4.713 ms.  This is `3*1024*100 / 0.004713` = 65.2 million 1024-point NTTs per second.   Note, this performance
 is achieved by remaining in L2 cache.  Global memory bandwidth on my card is about 2.5x too slow to sustain this rate.
 
 If the software were further developed, I believe it should be possible to achieve about 24,000 1M-point NTTs/sec on an
