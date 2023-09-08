@@ -44,6 +44,22 @@ To compile and run the CPU code and verify the results:
   diff cpu.out gpu.out
 ```
 
+To compile and run the GPU code for compute only:
+
+```
+  nvcc -arch=sm_89 Tester.cu -o compute_only -DCOMPUTE_ONLY
+  ./compute_only 1024 100
+```
+
+To compile and run the GPU code for data loading/storing only (no compute):
+
+```
+  nvcc -arch=sm_89 DataOnly.cu -o data_only
+  ./data_only 1024 100
+```
+
+The data only and compute only builds are useful for determining if we're compute or memory bound.
+
 ### Performance
 
 I am running on an RTX 4070 Ti, and I see the best performance with `./gpu_tester 3072 100`, with a run time of

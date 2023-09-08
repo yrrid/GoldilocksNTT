@@ -101,7 +101,9 @@ int main(int argc, const char** argv) {
   
   fprintf(stderr, "Run complete - copying data back to CPU\n");
   $CUDA(cudaMemcpy(cpuData, gpuData, sizeof(uint64_t)*ntts*1024, cudaMemcpyDeviceToHost));
-    
-  for(int i=0;i<ntts*1024;i+=4) 
-    printf("%016lX %016lX %016lX %016lX\n", cpuData[i], cpuData[i+1], cpuData[i+2], cpuData[i+3]);
+  
+  #if !defined(COMPUTE_ONLY)
+    for(int i=0;i<ntts*1024;i+=4) 
+      printf("%016lX %016lX %016lX %016lX\n", cpuData[i], cpuData[i+1], cpuData[i+2], cpuData[i+3]);
+  #endif
 }

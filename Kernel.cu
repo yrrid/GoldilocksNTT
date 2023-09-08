@@ -34,6 +34,10 @@ __launch_bounds__(384)
 __global__ void ntt1024(uint64_t* out, uint64_t* in, uint32_t* next, uint32_t count) {
   NTTEngine32 engine;
   uint32_t    dataIndex=0;
+
+  #ifdef COMPUTE_ONLY
+    bool        first=true;
+  #endif
   
   engine.initializeRoot();
     
@@ -41,8 +45,15 @@ __global__ void ntt1024(uint64_t* out, uint64_t* in, uint32_t* next, uint32_t co
     if((threadIdx.x & 0x1F)==0)
       dataIndex=atomicAdd(next, 1);
     dataIndex=__shfl_sync(0xFFFFFFFF, dataIndex, 0);      
-    if(dataIndex<count) 
-      engine.loadGlobalData(in, dataIndex);
+    if(dataIndex<count) {
+      #if defined(COMPUTE_ONLY)
+        if(first)
+          engine.loadGlobalData(in, dataIndex);
+        first=false;
+      #else
+        engine.loadGlobalData(in, dataIndex);
+      #endif
+    }
     else {
       if(dataIndex==count + (gridDim.x*blockDim.x>>5) - 1) {
         // last one to finish, reset the counter
